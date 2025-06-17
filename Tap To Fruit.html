@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tap To Fruit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      overflow: hidden;
+      background: linear-gradient(270deg, #1abc9c, #3498db, #9b59b6, #e67e22);
+      background-size: 800% 800%;
+      animation: gradientBG 15s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    #landingScreen {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 5;
+    }
+
+    #playBtn {
+      font-size: 36px;
+      padding: 20px 50px;
+      background: none;
+      border: 3px solid white;
+      color: white;
+      cursor: pointer;
+      border-radius: 15px;
+      text-transform: uppercase;
+      background: linear-gradient(270deg, #ff4b1f, #1fddff, #f39c12, #8e44ad);
+      background-size: 800% 800%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: textGradient 4s ease infinite;
+    }
+
+    #scoreboard {
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      padding: 12px 18px;
+      font-size: 22px;
+      z-index: 1;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+      border-bottom: 2px solid #00eaff;
+      letter-spacing: 1px;
+    }
+
+    #missCount.pulse {
+      animation: pulse 0.3s ease;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); color: red; }
+      50% { transform: scale(1.2); color: orange; }
+      100% { transform: scale(1); color: white; }
+    }
+
+    #gameArea {
+      position: relative;
+      width: 100vw;
+      height: calc(100vh - 60px);
+      overflow: hidden;
+    }
+
+    .fruit {
+      position: absolute;
+      font-size: 48px;
+      cursor: pointer;
+      user-select: none;
+      z-index: 1;
+      animation: float 1.5s ease-out;
+    }
+
+    @keyframes float {
+      0% {
+        transform: scale(0.2) rotate(0deg);
+        opacity: 0.3;
+      }
+      100% {
+        transform: scale(1) rotate(360deg);
+        opacity: 1;
+      }
+    }
+
+    #gameOver {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.85);
+      padding: 40px;
+      border-radius: 20px;
+      font-size: 32px;
+      display: none;
+      text-align: center;
+      z-index: 3;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+    }
+
+    #gameOverText {
+      font-size: 36px;
+      background: linear-gradient(270deg, #ff4b1f, #1fddff, #8e44ad, #f39c12);
+      background-size: 800% 800%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: textGradient 6s ease infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes textGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    #restartBtn {
+      font-size: 18px;
+      padding: 10px 24px;
+      border: none;
+      background: #e74c3c;
+      color: white;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: 0.2s;
+    }
+
+    #restartBtn:hover {
+      background: #c0392b;
+    }
+
+    #developedBy {
+      margin-top: 15px;
+      font-size: 14px;
+      font-style: italic;
+      opacity: 0.75;
+      background: linear-gradient(270deg, #1fddff, #ff4b1f, #8e44ad, #f39c12);
+      background-size: 800% 800%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: textGradient 6s ease infinite;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+<div id="landingScreen">
+  <button id="playBtn"><strong>Play</strong></button>
+</div>
+
+<div id="scoreboard">
+  <div>Score: <span id="score">0</span></div>
+  <div>Miss: <span id="missCount">0 / 3</span></div>
+</div>
+
+<div id="gameArea"></div>
+
+<div id="gameOver">
+  <div id="gameOverText">Game Over!</div>
+  <button id="restartBtn">Restart</button>
+  <div id="developedBy"><strong>Usama Tech Studio</strong></div>
+</div>
+
+<audio id="tapSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+<audio id="missSound" src="https://actions.google.com/sounds/v1/cartoon/concussive_hit_guitar_boing.ogg"></audio>
+<audio id="gameOverSound" src="https://actions.google.com/sounds/v1/human_voices/oh_no.ogg"></audio>
+
+<script>
+  const fruits = ['🍎', '🍌', '🍓', '🍇', '🍉', '🍍', '🍒', '🥝'];
+  const gameArea = document.getElementById("gameArea");
+  const scoreSpan = document.getElementById("score");
+  const missSpan = document.getElementById("missCount");
+  const gameOverScreen = document.getElementById("gameOver");
+  const restartBtn = document.getElementById("restartBtn");
+  const playBtn = document.getElementById("playBtn");
+  const landingScreen = document.getElementById("landingScreen");
+  const scoreboard = document.getElementById("scoreboard");
+  const tapSound = document.getElementById("tapSound");
+  const missSound = document.getElementById("missSound");
+  const gameOverSound = document.getElementById("gameOverSound");
+
+  let score = 0;
+  let misses = 0;
+  const maxMisses = 3;
+  let currentFruit = null;
+  let fruitTimeout;
+
+  function randomPosition() {
+    const x = Math.random() * (window.innerWidth - 50);
+    const y = Math.random() * (window.innerHeight - 120);
+    return { x, y };
+  }
+
+  function updateScoreboard() {
+    scoreSpan.textContent = score;
+    missSpan.textContent = `${misses} / ${maxMisses}`;
+    missSpan.classList.remove("pulse");
+    void missSpan.offsetWidth;
+    missSpan.classList.add("pulse");
+  }
+
+  function endGame() {
+    clearTimeout(fruitTimeout);
+    if (currentFruit) {
+      currentFruit.remove();
+      currentFruit = null;
+    }
+    gameOverSound.play();
+    gameOverScreen.style.display = 'block';
+  }
+
+  function createFruit() {
+    if (gameOverScreen.style.display === 'block') return;
+
+    if (currentFruit) {
+      misses++;
+      missSound.play();
+      updateScoreboard();
+      currentFruit.remove();
+      currentFruit = null;
+
+      if (misses >= maxMisses) {
+        endGame();
+        return;
+      }
+    }
+
+    const fruit = document.createElement("div");
+    fruit.className = "fruit";
+    fruit.textContent = fruits[Math.floor(Math.random() * fruits.length)];
+    const pos = randomPosition();
+    fruit.style.left = pos.x + "px";
+    fruit.style.top = pos.y + "px";
+
+    fruit.addEventListener("click", () => {
+      score++;
+      tapSound.currentTime = 0;
+      tapSound.play();
+      fruit.remove();
+      currentFruit = null;
+      updateScoreboard();
+      clearTimeout(fruitTimeout);
+      setTimeout(createFruit, 300);
+    });
+
+    gameArea.appendChild(fruit);
+    currentFruit = fruit;
+
+    fruitTimeout = setTimeout(() => {
+      if (currentFruit) {
+        misses++;
+        missSound.play();
+        updateScoreboard();
+        currentFruit.remove();
+        currentFruit = null;
+        if (misses >= maxMisses) {
+          endGame();
+        } else {
+          setTimeout(createFruit, 300);
+        }
+      }
+    }, 1500);
+  }
+
+  playBtn.addEventListener("click", () => {
+    landingScreen.style.display = "none";
+    scoreboard.style.display = "flex";
+    createFruit();
+  });
+
+  restartBtn.addEventListener("click", () => {
+    score = 0;
+    misses = 0;
+    updateScoreboard();
+    gameOverScreen.style.display = 'none';
+    createFruit();
+  });
+</script>
+
+</body>
+</html>
