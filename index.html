@@ -14,7 +14,6 @@
       background-size: 800% 800%;
       animation: gradientBG 15s ease infinite;
     }
-
     @keyframes gradientBG {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -37,12 +36,9 @@
     #playBtn {
       font-size: 36px;
       padding: 20px 50px;
-      background: none;
       border: 3px solid white;
-      color: white;
-      cursor: pointer;
       border-radius: 15px;
-      text-transform: uppercase;
+      cursor: pointer;
       background: linear-gradient(270deg, #ff4b1f, #1fddff, #f39c12, #8e44ad);
       background-size: 800% 800%;
       -webkit-background-clip: text;
@@ -50,28 +46,23 @@
       animation: textGradient 4s ease infinite;
     }
 
+    @keyframes textGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
     #scoreboard {
       display: none;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       background: rgba(0, 0, 0, 0.7);
       color: #fff;
       padding: 12px 18px;
       font-size: 22px;
       z-index: 1;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
       border-bottom: 2px solid #00eaff;
-      letter-spacing: 1px;
-    }
-
-    #missCount.pulse {
-      animation: pulse 0.3s ease;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); color: red; }
-      50% { transform: scale(1.2); color: orange; }
-      100% { transform: scale(1); color: white; }
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
     }
 
     #gameArea {
@@ -126,12 +117,6 @@
       margin-bottom: 20px;
     }
 
-    @keyframes textGradient {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
     #restartBtn {
       font-size: 18px;
       padding: 10px 24px;
@@ -152,12 +137,12 @@
       font-size: 14px;
       font-style: italic;
       opacity: 0.75;
+      white-space: nowrap;
       background: linear-gradient(270deg, #1fddff, #ff4b1f, #8e44ad, #f39c12);
       background-size: 800% 800%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: textGradient 6s ease infinite;
-      white-space: nowrap;
     }
   </style>
 </head>
@@ -169,7 +154,6 @@
 
 <div id="scoreboard">
   <div>Score: <span id="score">0</span></div>
-  <div>Miss: <span id="missCount">0 / 3</span></div>
 </div>
 
 <div id="gameArea"></div>
@@ -177,30 +161,27 @@
 <div id="gameOver">
   <div id="gameOverText">Game Over!</div>
   <button id="restartBtn">Restart</button>
-  <div id="developedBy"><strong>Usama Tech Studio</strong></div>
+  <div id="developedBy"><span>Usama Tech Studio</span></div>
 </div>
 
 <audio id="tapSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
-<audio id="missSound" src="https://actions.google.com/sounds/v1/cartoon/concussive_hit_guitar_boing.ogg"></audio>
+<audio id="bombSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
 <audio id="gameOverSound" src="https://actions.google.com/sounds/v1/human_voices/oh_no.ogg"></audio>
 
 <script>
-  const fruits = ['🍎', '🍌', '🍓', '🍇', '🍉', '🍍', '🍒', '🥝'];
+  const fruits = ['🍎', '🍌', '🍓', '🍇', '🍉', '🍍', '🍒', '🥝', '🥭', '🍑', '🍐', '🍊', '🍈', '🍏', '🍋', '🍅', '🍆', '🌽', '🥕', '🥥'];
   const gameArea = document.getElementById("gameArea");
   const scoreSpan = document.getElementById("score");
-  const missSpan = document.getElementById("missCount");
   const gameOverScreen = document.getElementById("gameOver");
   const restartBtn = document.getElementById("restartBtn");
   const playBtn = document.getElementById("playBtn");
   const landingScreen = document.getElementById("landingScreen");
   const scoreboard = document.getElementById("scoreboard");
   const tapSound = document.getElementById("tapSound");
-  const missSound = document.getElementById("missSound");
+  const bombSound = document.getElementById("bombSound");
   const gameOverSound = document.getElementById("gameOverSound");
 
   let score = 0;
-  let misses = 0;
-  const maxMisses = 3;
   let currentFruit = null;
   let fruitTimeout;
 
@@ -212,10 +193,6 @@
 
   function updateScoreboard() {
     scoreSpan.textContent = score;
-    missSpan.textContent = `${misses} / ${maxMisses}`;
-    missSpan.classList.remove("pulse");
-    void missSpan.offsetWidth;
-    missSpan.classList.add("pulse");
   }
 
   function endGame() {
@@ -232,34 +209,33 @@
     if (gameOverScreen.style.display === 'block') return;
 
     if (currentFruit) {
-      misses++;
-      missSound.play();
-      updateScoreboard();
       currentFruit.remove();
       currentFruit = null;
-
-      if (misses >= maxMisses) {
-        endGame();
-        return;
-      }
     }
 
     const fruit = document.createElement("div");
     fruit.className = "fruit";
-    fruit.textContent = fruits[Math.floor(Math.random() * fruits.length)];
+
+    const isBomb = Math.random() < 0.2; // 20% chance
+    fruit.textContent = isBomb ? '💣' : fruits[Math.floor(Math.random() * fruits.length)];
     const pos = randomPosition();
     fruit.style.left = pos.x + "px";
     fruit.style.top = pos.y + "px";
 
     fruit.addEventListener("click", () => {
-      score++;
-      tapSound.currentTime = 0;
-      tapSound.play();
-      fruit.remove();
-      currentFruit = null;
-      updateScoreboard();
-      clearTimeout(fruitTimeout);
-      setTimeout(createFruit, 300);
+      if (fruit.textContent === '💣') {
+        bombSound.play();
+        endGame();
+      } else {
+        score++;
+        tapSound.currentTime = 0;
+        tapSound.play();
+        fruit.remove();
+        currentFruit = null;
+        updateScoreboard();
+        clearTimeout(fruitTimeout);
+        setTimeout(createFruit, 300);
+      }
     });
 
     gameArea.appendChild(fruit);
@@ -267,16 +243,9 @@
 
     fruitTimeout = setTimeout(() => {
       if (currentFruit) {
-        misses++;
-        missSound.play();
-        updateScoreboard();
         currentFruit.remove();
         currentFruit = null;
-        if (misses >= maxMisses) {
-          endGame();
-        } else {
-          setTimeout(createFruit, 300);
-        }
+        setTimeout(createFruit, 300);
       }
     }, 1500);
   }
@@ -289,7 +258,6 @@
 
   restartBtn.addEventListener("click", () => {
     score = 0;
-    misses = 0;
     updateScoreboard();
     gameOverScreen.style.display = 'none';
     createFruit();
