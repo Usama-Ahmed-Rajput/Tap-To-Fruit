@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Tap To Fruit</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet" />
   <style>
     body {
       margin: 0;
@@ -14,11 +14,13 @@
       background-size: 800% 800%;
       animation: gradientBG 15s ease infinite;
     }
+
     @keyframes gradientBG {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
+
     #landingScreen {
       position: absolute;
       top: 0; left: 0;
@@ -30,9 +32,22 @@
       flex-direction: column;
       z-index: 5;
     }
-    #playBtn {
-      font-size: 36px;
-      padding: 20px 50px;
+
+    #gameTitle {
+      font-size: 48px;
+      margin-bottom: 30px;
+      text-align: center;
+      white-space: nowrap;
+      background: linear-gradient(270deg, #ff4b1f, #1fddff, #f39c12, #8e44ad);
+      background-size: 800% 800%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: textGradient 4s ease infinite;
+    }
+
+    #playBtn, #selectLevelBtn, #highScoreBtn {
+      font-size: 28px;
+      padding: 14px 32px;
       border: 3px solid white;
       border-radius: 15px;
       cursor: pointer;
@@ -41,12 +56,15 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: textGradient 4s ease infinite;
+      margin: 10px;
     }
+
     @keyframes textGradient {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
+
     #scoreboard {
       display: none;
       justify-content: center;
@@ -59,12 +77,14 @@
       border-bottom: 2px solid #00eaff;
       box-shadow: 0 4px 10px rgba(0,0,0,0.4);
     }
+
     #gameArea {
       position: relative;
       width: 100vw;
       height: calc(100vh - 60px);
       overflow: hidden;
     }
+
     .fruit {
       position: absolute;
       font-size: 48px;
@@ -73,16 +93,12 @@
       z-index: 1;
       animation: float 1.5s ease-out;
     }
+
     @keyframes float {
-      0% {
-        transform: scale(0.2) rotate(0deg);
-        opacity: 0.3;
-      }
-      100% {
-        transform: scale(1) rotate(360deg);
-        opacity: 1;
-      }
+      0% { transform: scale(0.2) rotate(0deg); opacity: 0.3; }
+      100% { transform: scale(1) rotate(360deg); opacity: 1; }
     }
+
     #gameOver {
       position: absolute;
       top: 40%;
@@ -97,6 +113,7 @@
       z-index: 3;
       box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
     }
+
     #gameOverText {
       font-size: 36px;
       background: linear-gradient(270deg, #ff4b1f, #1fddff, #8e44ad, #f39c12);
@@ -106,19 +123,35 @@
       animation: textGradient 6s ease infinite;
       margin-bottom: 20px;
     }
-    #restartBtn {
+
+    #restartBtn, #homeBtn {
       font-size: 18px;
       padding: 10px 24px;
       border: none;
-      background: #e74c3c;
-      color: white;
-      cursor: pointer;
+      margin-top: 10px;
       border-radius: 10px;
+      cursor: pointer;
       transition: 0.2s;
     }
+
+    #restartBtn {
+      background: #e74c3c;
+      color: white;
+    }
+
     #restartBtn:hover {
       background: #c0392b;
     }
+
+    #homeBtn {
+      background: #2ecc71;
+      color: white;
+    }
+
+    #homeBtn:hover {
+      background: #27ae60;
+    }
+
     #developedBy {
       margin-top: 15px;
       font-size: 14px;
@@ -131,42 +164,127 @@
       -webkit-text-fill-color: transparent;
       animation: textGradient 6s ease infinite;
     }
+
+    #levelModal, #highScoreModal {
+      display: none;
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.95);
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      color: white;
+      z-index: 6;
+    }
+
+    .levelBtn {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background: #3498db;
+      color: white;
+      cursor: pointer;
+    }
+
+    .levelBtn:hover {
+      background: #2980b9;
+    }
+
+    #closeHighScore {
+      margin-top: 15px;
+      padding: 8px 16px;
+      background: #e74c3c;
+      border: none;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    #closeHighScore:hover {
+      background: #c0392b;
+    }
   </style>
 </head>
 <body>
   <div id="landingScreen">
-    <button id="playBtn"><strong>Play</strong></button>
+    <h1 id="gameTitle">Tap To Fruit</h1>
+    <button id="playBtn">Play</button>
+    <button id="selectLevelBtn">Select Level</button>
+    <button id="highScoreBtn">High Score</button>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div id="developedBy">Usama Tech Studio</div>
   </div>
+
+  <div id="levelModal">
+    <h3>Select Difficulty</h3>
+    <button class="levelBtn" data-speed="1500">Easy</button>
+    <button class="levelBtn" data-speed="1000">Medium</button>
+    <button class="levelBtn" data-speed="800">Hard</button>
+  </div>
+
+  <div id="highScoreModal">
+    <h3>🏆 High Score</h3>
+    <div style="text-align: center;">
+      <div> Easy: <span id="scoreEasy">0</span></div>
+      <div> Medium: <span id="scoreMedium">0</span></div>
+      <div> Hard: <span id="scoreHard">0</span></div>
+    </div>
+    <button id="closeHighScore">Close</button>
+  </div>
+
   <div id="scoreboard">
     <div>Score: <span id="score">0</span></div>
   </div>
+
   <div id="gameArea"></div>
+
   <div id="gameOver">
     <div id="gameOverText">Game Over!</div>
     <button id="restartBtn">Restart</button>
-    <div id="developedBy"><span>Usama Tech Studio</span></div>
+    <button id="homeBtn">Back to Home</button>
+    <div id="developedBy">Usama Tech Studio</div>
   </div>
 
   <audio id="tapSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
   <audio id="bombSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
   <audio id="gameOverSound" src="https://actions.google.com/sounds/v1/human_voices/oh_no.ogg"></audio>
+  <audio id="starSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
 
   <script>
-    const fruits = ['🍎', '🍌', '🍓', '🍇', '🍉', '🍍', '🍒', '🥝', '🥭', '🍑', '🍐', '🍊', '🍈', '🍏', '🍋', '🍅', '🍆', '🌽', '🥕', '🥥'];
+    const fruits = ['🍎', '🍌', '🍓', '🍇', '🍉', '🍍', '🍒', '🥝', '🥭'];
     const gameArea = document.getElementById("gameArea");
     const scoreSpan = document.getElementById("score");
     const gameOverScreen = document.getElementById("gameOver");
     const restartBtn = document.getElementById("restartBtn");
+    const homeBtn = document.getElementById("homeBtn");
     const playBtn = document.getElementById("playBtn");
+    const selectLevelBtn = document.getElementById("selectLevelBtn");
+    const highScoreBtn = document.getElementById("highScoreBtn");
     const landingScreen = document.getElementById("landingScreen");
     const scoreboard = document.getElementById("scoreboard");
     const tapSound = document.getElementById("tapSound");
     const bombSound = document.getElementById("bombSound");
     const gameOverSound = document.getElementById("gameOverSound");
+    const starSound = document.getElementById("starSound");
+    const levelModal = document.getElementById("levelModal");
+    const highScoreModal = document.getElementById("highScoreModal");
+    const closeHighScore = document.getElementById("closeHighScore");
+    const scoreEasy = document.getElementById("scoreEasy");
+    const scoreMedium = document.getElementById("scoreMedium");
+    const scoreHard = document.getElementById("scoreHard");
 
     let score = 0;
-    let currentFruit = [];
     let fruitTimeout;
+    let fruitSpeed = 1500;
+    let currentLevel = "medium";
 
     function randomPosition() {
       const x = Math.random() * (window.innerWidth - 50);
@@ -178,32 +296,50 @@
       scoreSpan.textContent = score;
     }
 
+    function updateHighScore() {
+      const key = "highScore" + capitalize(currentLevel);
+      const previous = localStorage.getItem(key) || 0;
+      if (score > parseInt(previous)) {
+        localStorage.setItem(key, score);
+      }
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function showHighScore() {
+      scoreEasy.textContent = localStorage.getItem("highScoreEasy") || 0;
+      scoreMedium.textContent = localStorage.getItem("highScoreMedium") || 0;
+      scoreHard.textContent = localStorage.getItem("highScoreHard") || 0;
+      highScoreModal.style.display = "block";
+    }
+
     function endGame() {
       clearTimeout(fruitTimeout);
       gameArea.querySelectorAll(".fruit").forEach(f => f.remove());
-      currentFruit = [];
       gameOverSound.play();
+      updateHighScore();
       gameOverScreen.style.display = 'block';
     }
 
     function createFruit() {
       if (gameOverScreen.style.display === 'block') return;
-
       gameArea.querySelectorAll(".fruit").forEach(f => f.remove());
-      currentFruit = [];
 
       let fruitCount = 1;
-      if (score >= 19 && score < 35) {
-        fruitCount = 2;
-      } else if (score >= 35) {
-        fruitCount = 3;
-      }
+      if (score >= 19 && score < 35) fruitCount = 2;
+      if (score >= 35) fruitCount = 3;
 
       for (let i = 0; i < fruitCount; i++) {
         const fruit = document.createElement("div");
         fruit.className = "fruit";
-        const isBomb = Math.random() < 0.2;
-        fruit.textContent = isBomb ? '💣' : fruits[Math.floor(Math.random() * fruits.length)];
+
+        const rand = Math.random();
+        const isBomb = rand < 0.15;
+        const isStar = !isBomb && rand < 0.25;
+
+        fruit.textContent = isBomb ? '💣' : (isStar ? '🌟' : fruits[Math.floor(Math.random() * fruits.length)]);
         const pos = randomPosition();
         fruit.style.left = pos.x + "px";
         fruit.style.top = pos.y + "px";
@@ -212,28 +348,33 @@
           if (fruit.textContent === '💣') {
             bombSound.play();
             endGame();
+          } else if (fruit.textContent === '🌟') {
+            score += 5;
+            starSound.currentTime = 0;
+            starSound.play();
+            fruit.remove();
+            updateScoreboard();
           } else {
             score++;
             tapSound.currentTime = 0;
             tapSound.play();
             fruit.remove();
             updateScoreboard();
-            if (!document.querySelector(".fruit")) {
-              clearTimeout(fruitTimeout);
-              setTimeout(createFruit, 300);
-            }
+          }
+
+          if (!document.querySelector(".fruit")) {
+            clearTimeout(fruitTimeout);
+            setTimeout(createFruit, 300);
           }
         });
 
         gameArea.appendChild(fruit);
-        currentFruit.push(fruit);
       }
 
       fruitTimeout = setTimeout(() => {
         gameArea.querySelectorAll(".fruit").forEach(f => f.remove());
-        currentFruit = [];
         setTimeout(createFruit, 300);
-      }, 1500);
+      }, fruitSpeed);
     }
 
     playBtn.addEventListener("click", () => {
@@ -249,6 +390,36 @@
       updateScoreboard();
       gameOverScreen.style.display = 'none';
       createFruit();
+    });
+
+    homeBtn.addEventListener("click", () => {
+      gameOverScreen.style.display = "none";
+      landingScreen.style.display = "flex";
+      scoreboard.style.display = "none";
+      gameArea.querySelectorAll(".fruit").forEach(f => f.remove());
+      clearTimeout(fruitTimeout);
+      score = 0;
+      updateScoreboard();
+    });
+
+    selectLevelBtn.addEventListener("click", () => {
+      levelModal.style.display = "block";
+    });
+
+    document.querySelectorAll(".levelBtn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        fruitSpeed = parseInt(btn.dataset.speed);
+        currentLevel = btn.textContent.toLowerCase();
+        levelModal.style.display = "none";
+      });
+    });
+
+    highScoreBtn.addEventListener("click", () => {
+      showHighScore();
+    });
+
+    closeHighScore.addEventListener("click", () => {
+      highScoreModal.style.display = "none";
     });
   </script>
 </body>
