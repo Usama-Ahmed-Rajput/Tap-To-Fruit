@@ -165,7 +165,7 @@
       animation: textGradient 6s ease infinite;
     }
 
-    #levelModal, #highScoreModal {
+    #levelModal, #highScoreModal, #levelWarningModal {
       display: none;
       position: absolute;
       top: 50%; left: 50%;
@@ -176,6 +176,11 @@
       text-align: center;
       color: white;
       z-index: 6;
+      animation: popupFade 0.4s ease;
+    }
+
+    #levelModal {
+      width: 300px;
     }
 
     .levelBtn {
@@ -193,33 +198,82 @@
       background: #2980b9;
     }
 
-    #closeHighScore {
-      margin-top: 15px;
-      padding: 8px 16px;
+    .selectedLevel {
+      background: #2ecc71 !important;
+      box-shadow: 0 0 10px #2ecc71;
+    }
+
+    #highScoreModal {
+      border: 2px solid #00eaff;
+      box-shadow: 0 0 25px #00eaff;
+      width: 300px;
+    }
+
+    #highScoreModal h3, #levelWarningModal h3 {
+      font-size: 26px;
+      margin-bottom: 20px;
+      background: linear-gradient(270deg, #1fddff, #ff4b1f, #8e44ad, #f39c12);
+      background-size: 800% 800%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: textGradient 6s ease infinite;
+    }
+
+    #highScoreModal div {
+      font-size: 18px;
+      margin: 8px 0;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+
+    #closeHighScore, #closeLevelWarning {
+      margin-top: 20px;
+      padding: 10px 24px;
+      font-size: 16px;
       background: #e74c3c;
       border: none;
       color: white;
       border-radius: 10px;
       cursor: pointer;
+      transition: 0.3s;
     }
 
-    #closeHighScore:hover {
+    #closeHighScore:hover, #closeLevelWarning:hover {
       background: #c0392b;
+    }
+
+    #levelWarningModal {
+      border: 2px solid #f1c40f;
+      box-shadow: 0 0 25px #f1c40f;
+      width: 320px;
+    }
+
+    #levelWarningModal p {
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    @keyframes popupFade {
+      from {
+        transform: translate(-50%, -60%) scale(0.9);
+        opacity: 0;
+      }
+      to {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+      }
     }
   </style>
 </head>
 <body>
+
   <div id="landingScreen">
     <h1 id="gameTitle">Tap To Fruit</h1>
     <button id="playBtn">Play</button>
     <button id="selectLevelBtn">Select Level</button>
     <button id="highScoreBtn">High Score</button>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
+    <br><br><br><br><br><br>
     <div id="developedBy">Usama Tech Studio</div>
   </div>
 
@@ -232,18 +286,19 @@
 
   <div id="highScoreModal">
     <h3>🏆 High Score</h3>
-    <div style="text-align: center;">
-      <div> Easy: <span id="scoreEasy">0</span></div>
-      <div> Medium: <span id="scoreMedium">0</span></div>
-      <div> Hard: <span id="scoreHard">0</span></div>
-    </div>
+    <div>Easy: <span id="scoreEasy">0</span></div>
+    <div>Medium: <span id="scoreMedium">0</span></div>
+    <div>Hard: <span id="scoreHard">0</span></div>
     <button id="closeHighScore">Close</button>
   </div>
 
-  <div id="scoreboard">
-    <div>Score: <span id="score">0</span></div>
+  <div id="levelWarningModal">
+    <h3> Level Not Selected</h3>
+    <p>Please select a level before playing.</p>
+    <button id="closeLevelWarning">Close</button>
   </div>
 
+  <div id="scoreboard">Score: <span id="score">0</span></div>
   <div id="gameArea"></div>
 
   <div id="gameOver">
@@ -280,11 +335,18 @@
     const scoreEasy = document.getElementById("scoreEasy");
     const scoreMedium = document.getElementById("scoreMedium");
     const scoreHard = document.getElementById("scoreHard");
+    const levelWarningModal = document.getElementById("levelWarningModal");
+    const closeLevelWarning = document.getElementById("closeLevelWarning");
+
+    closeLevelWarning.addEventListener("click", () => {
+      levelWarningModal.style.display = "none";
+    });
 
     let score = 0;
     let fruitTimeout;
-    let fruitSpeed = 1500;
-    let currentLevel = "medium";
+    let fruitSpeed = 0;
+    let currentLevel = "";
+    let isLevelSelected = false;
 
     function randomPosition() {
       const x = Math.random() * (window.innerWidth - 50);
@@ -378,6 +440,10 @@
     }
 
     playBtn.addEventListener("click", () => {
+      if (!isLevelSelected) {
+        levelWarningModal.style.display = "block";
+        return;
+      }
       landingScreen.style.display = "none";
       scoreboard.style.display = "flex";
       score = 0;
@@ -410,6 +476,11 @@
       btn.addEventListener("click", () => {
         fruitSpeed = parseInt(btn.dataset.speed);
         currentLevel = btn.textContent.toLowerCase();
+        isLevelSelected = true;
+
+        document.querySelectorAll(".levelBtn").forEach(b => b.classList.remove("selectedLevel"));
+        btn.classList.add("selectedLevel");
+
         levelModal.style.display = "none";
       });
     });
@@ -422,5 +493,6 @@
       highScoreModal.style.display = "none";
     });
   </script>
+
 </body>
 </html>
