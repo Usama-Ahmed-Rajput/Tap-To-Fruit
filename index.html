@@ -5,6 +5,122 @@
   <title>Tap To Fruit</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet" />
+  <link rel="shortcut icon" href="images/img.png" type="image/x-icon">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      overflow: hidden;
+      /* background: linear-gradient(270deg, #1abc9c, #3498db, #9b59b6, #e67e22); */
+      background-size: 800% 800%;
+      animation: gradientBG 15s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    #utilityButtons {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 10;
+      display: flex;
+      gap: 10px;
+    }
+
+    .utilBtn {
+      padding: 6px 12px;
+      font-size: 14px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      background: transparent;
+      color: #f8f6f6;
+    }
+
+    .modal {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.95);
+      color: white;
+      padding: 20px;
+      border-radius: 15px;
+      z-index: 100;
+      width: 80%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .modal h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .modal p {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .modal button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      font-size: 14px;
+      background: #e74c3c;
+      border: none;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .utilBtn{
+      &:hover{
+        background: linear-gradient(270deg, #1abc9c, #3498db, #9b59b6, #e67e22);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Utility Buttons -->
+  <div id="utilityButtons">
+    <button class="utilBtn" onclick="showModal('home')"><strong>Home</strong></button>
+    <button class="utilBtn" onclick="showModal('howToPlay')"><strong>How to Play</strong></button>
+    <button class="utilBtn" onclick="showModal('privacy')"><strong>Privacy Policy</strong></button>
+  </div>
+
+  <!-- Modals -->
+  <div id="home" class="modal">
+    <h2>Welcome to Tap To Fruit!</h2>
+    <p>This is a fun fruit tapping game. Choose a level, tap fruits, avoid bombs, and beat high scores!</p>
+    <button onclick="closeModal('home')">Close</button>
+  </div>
+  <div id="howToPlay" class="modal">
+    <h2>How to Play</h2>
+    <p>Select difficulty level → Tap fruits to earn points → Tap stars for bonus → Avoid bombs or game over!</p>
+    <button onclick="closeModal('howToPlay')">Close</button>
+  </div>
+  <div id="privacy" class="modal">
+    <h2>Privacy Policy</h2>
+    <p>We do not collect personal data. The game runs fully in your browser. No login or info needed.</p>
+    <button onclick="closeModal('privacy')">Close</button>
+  </div>
+
+  <!-- Original Game HTML continues here -->
+  <!-- ... (rest of the user's original HTML and game code remains untouched) -->
+
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tap To Fruit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet" />
+  <link rel="shortcut icon" href="images/img.png" type="image/x-icon">
   <style>
     body {
       margin: 0;
@@ -494,5 +610,17 @@
     });
   </script>
 
+</body>
+</html>
+
+  <script>
+    function showModal(id) {
+      document.getElementById(id).style.display = 'block';
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+  </script>
 </body>
 </html>
