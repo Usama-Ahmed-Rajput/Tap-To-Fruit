@@ -103,6 +103,8 @@
     <button class="utilBtn" onclick="showModal('home')"><strong>Home</strong></button>
     <button class="utilBtn" onclick="showModal('howToPlay')"><strong>How to Play</strong></button>
     <button class="utilBtn" onclick="showModal('privacy')"><strong>Privacy Policy</strong></button>
+    <button class="utilBtn" onclick="showModal('update')"><strong>Updates</strong></button>
+    <button class="utilBtn" onclick="showModal('contact')"><strong>Contact Us</strong></button>
   </div>
 
   <!-- Modals -->
@@ -120,6 +122,29 @@
     <h2>Privacy Policy</h2>
     <p>We do not collect personal data. The game runs fully in your browser. No login or info needed.</p>
     <button onclick="closeModal('privacy')">Close</button>
+  </div>
+  <div id="update" class="modal">
+    <h2>Updates</h2>
+    <p>This policy may change. Updates will be shown on this page with the new date.</p>
+    <button onclick="closeModal('update')">Close</button>
+  </div>
+  <div id="contact" class="modal">
+    <h2>Contact Us</h2>
+  <form action="https://formsubmit.co/usamatechstudio@gmail.com" method="POST">
+  <!-- Extra settings -->
+  <input type="hidden" name="_captcha" value="false">
+  <input type="hidden" name="_template" value="box">
+  <input type="hidden" name="_subject" value="New Message from Tap To Fruit Website">
+
+  <!-- Input fields -->
+  <input type="text" name="name" placeholder="Your Name" required><br><br>
+  <input type="email" name="email" placeholder="Your Email" required><br><br>
+  <textarea name="message" placeholder="Your Message" rows="5" required></textarea><br><br>
+  
+  <button type="submit">Send Message</button>
+</form>
+
+    <button onclick="closeModal('contact')">Close</button>
   </div>
 
   <!DOCTYPE html>
