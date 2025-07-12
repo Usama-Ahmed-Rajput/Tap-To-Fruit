@@ -23,6 +23,7 @@ const scoreMedium = document.getElementById("scoreMedium");
 const scoreHard = document.getElementById("scoreHard");
 const levelWarningModal = document.getElementById("levelWarningModal");
 const closeLevelWarning = document.getElementById("closeLevelWarning");
+const utilityButtons = document.getElementById("utilityButtons");
 
 closeLevelWarning.addEventListener("click", () => {
   levelWarningModal.style.display = "none";
@@ -132,6 +133,7 @@ playBtn.addEventListener("click", () => {
   }
   landingScreen.style.display = "none";
   scoreboard.style.display = "flex";
+  utilityButtons.classList.add("hidden"); // 🔴 HIDE buttons
   score = 0;
   updateScoreboard();
   createFruit();
@@ -148,6 +150,7 @@ homeBtn.addEventListener("click", () => {
   gameOverScreen.style.display = "none";
   landingScreen.style.display = "flex";
   scoreboard.style.display = "none";
+  utilityButtons.classList.remove("hidden"); // 🟢 SHOW buttons
   gameArea.querySelectorAll(".fruit").forEach(f => f.remove());
   clearTimeout(fruitTimeout);
   score = 0;
