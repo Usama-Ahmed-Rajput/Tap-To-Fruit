@@ -343,3 +343,8 @@ body {
     opacity: 1;
   }
 }
+
+/* 👇 ADDED: hide class */
+.hidden {
+  display: none !important;
+}
