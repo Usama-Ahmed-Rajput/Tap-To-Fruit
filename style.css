@@ -355,7 +355,7 @@ body {
     top: 5px;
     right: 5px;
     gap: 5px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     max-width: 95vw;
   }
 
@@ -366,6 +366,7 @@ body {
     border-radius: 4px;
   }
 }
+
 
 
 
