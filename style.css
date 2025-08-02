@@ -349,18 +349,7 @@ body {
   display: none !important;
 }
 
-@media (max-width: 600px) {
-  #utilityButtons {
-    flex-wrap: wrap;
-    gap: 5px;
-    justify-content: flex-end;
-    padding: 0 10px;
-  }
 
-  .utilBtn {
-    padding: 4px 8px;
-    font-size: 12px;
-  }
-}
+
 
 
