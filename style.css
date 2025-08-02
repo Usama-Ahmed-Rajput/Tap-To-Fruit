@@ -352,7 +352,7 @@ body {
 
 @media screen and (max-width: 600px) {
   #utilityButtons {
-    flex-wrap: wrap;
+/*     flex-wrap: wrap; */
     justify-content: center;
     top: auto;
     bottom: 10px;
@@ -371,6 +371,7 @@ body {
     border-radius: 4px;
   }
 }
+
 
 
 
